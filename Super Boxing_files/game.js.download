@@ -1549,14 +1549,18 @@ ig.module("impact.input")
                 if (
                 	c = "keydown" == b.type ? 
                 			b.keyCode 
-                			: 2 == b.button ? ig.KEY.MOUSE2 : ig.KEY.MOUSE1,
-                				0 > c && window.focus(),
-                				("touchstart" == b.type || "mousedown" == b.type) 
-                				&& this.mousemove(b),
-                				
-                				c = this.bindings[c]
+                			: 2 == b.button ? 
+                				ig.KEY.MOUSE2 
+                				: ig.KEY.MOUSE1,
+                				  0 > c 
+                				  && window.focus(),
+                				  ("touchstart" == b.type || "mousedown" == b.type) 
+                				  && this.mousemove(b),
+                				  c = this.bindings[c]
                 )
                     this.actions[c] = !0,
+                //MYO should add presses[37] for left
+                //MYO should add presses[39] for right
                     this.locks[c] || (this.presses[c] = !0,
                     this.locks[c] = !0),
                     b.stopPropagation(),
@@ -5499,14 +5503,19 @@ ig.module("game.entities.fighter")
             && (this.inputBuffer && this.inputBuffer.length) 
             && (this.inputBuffer.shift(),
             this.inputBufferTimer.reset());
+            
             this.playerIntercept = !1;
             ig.input.released("click") 
             && (this.playerIntercept = !0);
-            "player" === this.name && (ig.input.released("block") ? (this.playerIntercept = !0,
-            this.unblock(),
-            this.inputBuffer = []) : ig.input.state("block") ? (this.playerIntercept = !0,
-            this.block(),
-            this.inputBuffer = []) : (ig.input.pressed("left") && (this.playerIntercept = !0,
+
+            "player" === this.name && (ig.input.released("block") ? 
+            	(this.playerIntercept = !0,
+            		this.unblock(),
+            		this.inputBuffer = []) 
+            : ig.input.state("block") ? (this.playerIntercept = !0,
+            		this.block(),
+            		this.inputBuffer = []) 
+            	: (ig.input.pressed("left") && (this.playerIntercept = !0,
             this.punch("left")),
             ig.input.pressed("right") && (this.playerIntercept = !0,
             this.punch("right")),
@@ -6493,6 +6502,7 @@ ig.module("game.main")
                 }
         },
         setupControls: function() {
+        	//TODO add myo to controls
                 ig.input.unbindAll();
                 ig.input.initMouse();
                 ig.input.bind(ig.KEY.MOUSE1, 'click');
