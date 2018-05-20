@@ -1544,6 +1544,8 @@ ig.module("impact.input")
             b.preventDefault())
         },
         keydown: function(b) {
+            console.log("KEYDOWN")
+            console.log(b)
             var c = b.target.tagName;
             if (!("INPUT" == c || "TEXTAREA" == c))
                 if (
@@ -1553,20 +1555,23 @@ ig.module("impact.input")
                 				ig.KEY.MOUSE2 
                 				: ig.KEY.MOUSE1,
                 				  0 > c 
-                				  && window.focus(),
-                				  ("touchstart" == b.type || "mousedown" == b.type) 
-                				  && this.mousemove(b),
-                				  c = this.bindings[c]
+                				  && window.focus()
+                    , ("touchstart" == b.type || "mousedown" == b.type) 
+                    && this.mousemove(b),
+                	c = this.bindings[c]
                 )
                     this.actions[c] = !0,
                 //MYO should add presses[37] for left
                 //MYO should add presses[39] for right
-                    this.locks[c] || (this.presses[c] = !0,
-                    this.locks[c] = !0),
+                    this.presses[c] = !0
+                    // this.locks[c] || (this.presses[c] = !0,
+                    // this.locks[c] = !0),
                     b.stopPropagation(),
                     b.preventDefault()
         },
         keyup: function(b) {
+            console.log("KEYUP")
+            console.log(b)
             var c = b.target.tagName;
             if (!("INPUT" == c || "TEXTAREA" == c))
                 if (c = this.bindings["keyup" == b.type ? 
@@ -1614,6 +1619,8 @@ ig.module("impact.input")
             return this.actions[b]
         },
         pressed: function(b) {
+            // console.log("pressed")
+            // console.log(b)
             return this.presses[b]
         },
         released: function(b) {
@@ -1628,6 +1635,9 @@ ig.module("impact.input")
         },
         touchStart: function(b, c) {
             this.actions[c] = !0;
+
+                        console.log("presses TOUCHSTART")
+
             this.presses[c] = !0;
             b.stopPropagation();
             b.preventDefault();
@@ -4038,12 +4048,17 @@ ig.module("game.entities.pointer")
 	            this.hoveringItem = null),
 	            b = this.pos.x + 0.5 * this.size.x,
 	            c = ig.game.getEntityByName("player")
-	        )
+	        ) 
+            { 
+                // console.log("isClicking")
+                // console.log(this.isClicking)
                 this.isClicking && (b < ig.system.width / 3 ? 
                 	c.punch("left") : 
                 	b > 2 * ig.system.width / 3 ? c.punch("right") : c.block()),
                 ig.input.state("click") && b >= ig.system.width / 3 && b <= 2 * ig.system.width / 3 && c.block(),
                 this.isReleased && c.unblock();
+            }
+
             this.isClicking = ig.input.pressed("click");
             this.isReleased = ig.input.released("click")
         }
