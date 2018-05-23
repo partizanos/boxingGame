@@ -1,8 +1,11 @@
 //This tells Myo.js to create the web sockets needed to communnicate with Myo Connect
 Myo.connect('com.myojs.deviceGraphs');
 
-Myo.on('gyroscope', function(quant){
-	updateGraph(quant);
+// Myo.on('gyroscope', function(quant){
+Myo.on('accelerometer', function(quant){
+	// console.log(quant);
+	// updateGraph(quant);
+	accelerometerTrigger(quant);
 })
 
 var range = 500;
@@ -56,40 +59,41 @@ var oldTime = new Date().getTime()
 var timeDifference = 1000
 var keyboardEvent = document.createEvent("KeyboardEvent");
 var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";	
-var updateGraph = function(orientationData){
-	
+var updateGraph = function(orientationData){	
 
+	distancex = oldOrientationData.x - orientationData.x
+	distancey = oldOrientationData.y - orientationData.y
+	distancez = oldOrientationData.z - orientationData.z
 	  distance = Math.max(
-	 	(oldOrientationData.x - orientationData.x),
-	 	(oldOrientationData.y - orientationData.y),
-	 	(oldOrientationData.z - orientationData.z))
+	 	(distancex),
+	 	(distancey),
+	 	(distancez))
 
 	 oldOrientationData = orientationData;
-	 
-	 if(distance > 100){
-
-	keyboardEvent[initMethod](
-                   "keydown", // event type : keydown, keyup, keypress
-                    true, // bubbles
-                    true, // cancelable
-                    window, // viewArg: should be window
-                    false, // ctrlKeyArg
-                    false, // altKeyArg
-                    false, // shiftKeyArg
-                    false, // metaKeyArg
-                    40, // keyCodeArg : unsigned long the virtual key code, else 0
-                    0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
-	);
-	document.dispatchEvent(keyboardEvent);
-	 	
-
-	  console.log("distance: ", distance)
-	  console.log(" timeDiff : ", timeDifference)
-	  console.log("TODO call punch");
-
-	  newTime = new Date().getTime();
+	 newTime = new Date().getTime();	 
 	 timeDifference = newTime - oldTime;
-	 oldTime = newTime;
+	 
+	 if( true 
+	 	&&timeDifference > 100
+	 	){
+	
+		 if( true 
+	 	&&distance > 100
+	 	){
+
+	 //  console.log("distance x: ", 	distancex)
+		// console.log("distance y: ",distancey)
+		// console.log("distance z: ",distancez)
+	 //  console.log(" timeDiff : ", timeDifference)
+	  console.log("Left");
+	  // sendPunch( );
+	 	 oldTime = newTime;
+	 } else if( true 
+	 	&&distance > 70
+	 	&&timeDifference > 3000
+	 	){
+	 	console.log("haha u punch like a girl")
+	 	 // oldTime = newTime;
 	 }
 	Object.keys(orientationData).map(function(axis){
 		graphData[axis] = graphData[axis].slice(1);
@@ -98,13 +102,10 @@ var updateGraph = function(orientationData){
 
 	graph.setData(formatFlotData());
 	graph.draw();
+}}
+
+
+var accelerometerTrigger = function(data) {
+  max = Math.max(Math.abs(data.x) ,Math.abs(data.y) ,Math.abs(data.z) )
+  max > 1.4 ? console.log(max) :null
 }
-
-
-
-/*
-
-
-
-
-*/

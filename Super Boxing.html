@@ -13,6 +13,7 @@
 <script type="text/javascript" src="./Super Boxing_files/jukebox.js"></script>
 <script type="text/javascript" src="./Super Boxing_files/utilities.js"></script>
 <script type="text/javascript" src="./Super Boxing_files/game.js.download"></script>
+<script type="text/javascript" src="./Super Boxing_files/myo.js"></script>
 
 
 <script type="text/javascript" src="./Super Boxing_files/webaudio-context-patch.js.download"></script>
@@ -129,49 +130,49 @@
 <div id="more-games" style="float: left; position: absolute; left: 633.438px; top: 551.776px; width: 100.466px; height: 58.973px; display: none; visibility: hidden;"><a target="_blank" href="http://www.marketjs.com/game/links/mobile"><img style="width:100%;height:100%" src="./Super Boxing_files/invisible.png"></a></div><span style="margin: 0px auto; border: 2px dotted rgb(255, 165, 0); position: absolute; z-index: 2147483647; visibility: hidden; left: 265px; width: 0px; top: 93px; height: 0px;"></span><span style="z-index: 2147483647; position: absolute; visibility: hidden; left: 250px; width: 50px; top: 78px; height: 20px; font-size: 10px; color: black;"></span>
 
 <script type="text/javascript">
-	  function triggerEvent(el, type){
-if ('createEvent' in document) {
-        // modern browsers, IE9+
-        var e = document.createEvent('HTMLEvents');
-        e.initEvent(type, false, true);
-        el.dispatchEvent(e);
-    } else {
-        // IE 8
-        var e = document.createEventObject();
-        e.eventType = type;
-        el.fireEvent('on'+e.eventType, e);
-    }
-}
-setInterval(function() {	 
+	  // function triggerEvent(el, type){
+// if ('createEvent' in document) {
+//         // modern browsers, IE9+
+//         var e = document.createEvent('HTMLEvents');
+//         e.initEvent(type, false, true);
+//         el.dispatchEvent(e);
+//     } else {
+//         // IE 8
+//         var e = document.createEventObject();
+//         e.eventType = type;
+//         el.fireEvent('on'+e.eventType, e);
+//     }
+// }
+// setInterval(function() {	 
 
-	var event = document.createEvent('KeyboardEvent'); // create a key event
+// 	var event = document.createEvent('KeyboardEvent'); // create a key event
 
-	    // Chromium Hack
-    Object.defineProperty(event, 'keyCode', {
-                get : function() {
-                    return this.keyCodeVal;
-                }
-    });     
-    Object.defineProperty(event, 'which', {
-                get : function() {
-                    return this.keyCodeVal;
-                }
-    });  
-// define the event
-event.initKeyboardEvent("keydown",       // typeArg,                                                           
-                   true,             // canBubbleArg,                                                        
-                   true,             // cancelableArg,                                                       
-                   null,             // viewArg,  Specifies UIEvent.view. This value may be null.     
-                   false,            // ctrlKeyArg,                                                               
-                   false,            // altKeyArg,                                                        
-                   false,            // shiftKeyArg,                                                      
-                   false,            // metaKeyArg,                                                       
-                    37,               // keyCodeArg,                                                      
-                    37);              // charCodeArg);
+// 	    // Chromium Hack
+//     Object.defineProperty(event, 'keyCode', {
+//                 get : function() {
+//                     return this.keyCodeVal;
+//                 }
+//     });     
+//     Object.defineProperty(event, 'which', {
+//                 get : function() {
+//                     return this.keyCodeVal;
+//                 }
+//     });  
+// // define the event
+// event.initKeyboardEvent("keydown",       // typeArg,                                                           
+//                    true,             // canBubbleArg,                                                        
+//                    true,             // cancelableArg,                                                       
+//                    null,             // viewArg,  Specifies UIEvent.view. This value may be null.     
+//                    false,            // ctrlKeyArg,                                                               
+//                    false,            // altKeyArg,                                                        
+//                    false,            // shiftKeyArg,                                                      
+//                    false,            // metaKeyArg,                                                       
+//                     37,               // keyCodeArg,                                                      
+//                     37);              // charCodeArg);
 
-event.keyCodeVal = 37;
-document.querySelector('body').dispatchEvent(event);
-}, 1500) 
+// event.keyCodeVal = 37;
+// document.querySelector('body').dispatchEvent(event);
+// }, 1500) 
 </script></body>
 
 

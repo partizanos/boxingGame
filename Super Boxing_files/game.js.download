@@ -5543,7 +5543,8 @@ ig.module("game.entities.fighter")
             		this.enemyActionTimer 
             		&& 0 <= this.enemyActionTimer.delta() 
             		&& this.canAction 
-            		&& this.CPU_MakeMove() 
+                    // && this.CPU_MakeMove() 
+            		// TODO STOP CPU 
             : ig.game.demo 
             		&& this._CPU_PLAYER_TIMER 
             		&& 0 <= this._CPU_PLAYER_TIMER.delta() 
