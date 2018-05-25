@@ -210,9 +210,7 @@ var handside;
 				gyroscope : {
 					x : data.gyroscope[0],
 					y : data.gyroscope[1],
-					z : data.gyroscope[2],
-					data: data,
-					myo: myo
+					z : data.gyroscope[2]
 				}
 			};
 			if(!myo.lastIMU) myo.lastIMU = imu_data;
@@ -225,17 +223,15 @@ var handside;
 		'emg' : function(myo, data){
 			myo.trigger(data.type, data.emg, data.timestamp);
 		},
-
-
 		//Status Events
 		'arm_synced' : function(myo, data){
 			myo.arm = data.arm;
-			// hand = myo.arm;
-			// myo.trigger('get_arm', handside);
+			handside = myo.arm;
 			myo.direction = data.x_direction;
 			myo.warmupState = data.warmup_state;
 			myo.synced = true;
-
+			//triggering function to get arm while playing
+			myo.trigger('get_arm', handside);
 			return true;
 		},
 		'arm_unsynced' : function(myo, data){
@@ -355,7 +351,10 @@ var handside;
 
 //This tells Myo.js to create the web sockets needed to communnicate with Myo Connect
 Myo.connect('com.myojs.deviceGraphs');
-
+//get arm from :235
+Myo.on('get_arm', function(handside){
+	console.log("here is arm: ", handside)
+})
 Myo.on('gyroscope', function(quant){
 	updateGraph(quant);
 })
@@ -363,14 +362,12 @@ Myo.on('gyroscope', function(quant){
 var oldOrientationData = {x: 0, y:0, z :0 },  distance = 0;
 var oldTime = new Date().getTime()
 var timeDifference = 1000
-var lastLaugh = 0;
+var 	 lastLaugh = 0;
 var keyboardEvent = document.createEvent("KeyboardEvent");
-var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
-
+var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";	
 var updateGraph = function(orientationData){
-var hand = orientationData.myo.name;
-// console.log("data", orientationData.data);
-// console.log("Myo", orientationData.myo.name);
+	
+
 distancex = oldOrientationData.x - orientationData.x
 distancey = oldOrientationData.y - orientationData.y
 distancez = oldOrientationData.z - orientationData.z
@@ -395,7 +392,7 @@ distancez = oldOrientationData.z - orientationData.z
 		// console.log("distance z: ",distancez)
 	 //  console.log(" timeDiff : ", timeDifference)
 	 //  console.log("TODO call punch");
-	  sendPunch(hand);
+	  sendPunch( );
 	 	 oldTime = newTime;
 	 } else if( true 
 	 	&&distance > 30
@@ -416,8 +413,7 @@ var accelerometerTrigger = function(data) {
 }
 
 
-function sendPunch(hand) {
-
+function sendPunch( ) {
 	console.log("PUNCHED")
 		  function triggerEvent(el, type){
 if ('createEvent' in document) {
@@ -449,7 +445,7 @@ if ('createEvent' in document) {
     });  
  console.log('punching arm:', handside);
 // define the event
-if (hand == "Left"){
+if (handside == "left"){
 event.initKeyboardEvent("keydown",       // typeArg,                                                           
                    true,             // canBubbleArg,                                                        
                    true,             // cancelableArg,                                                       
@@ -465,7 +461,7 @@ event.keyCodeVal = 37;
 document.querySelector('body').dispatchEvent(event);
 // }, 1500) 	
 }
-if (hand == "Right"){
+if (handside == "right"){
 event.initKeyboardEvent("keydown",       // typeArg,                                                           
                    true,             // canBubbleArg,                                                        
                    true,             // cancelableArg,                                                       
