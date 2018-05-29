@@ -3749,6 +3749,7 @@ ig.module("game.entities.button")
         released: function() {
             this.parent();
             this.locked || (ig.game.score = 0,
+            //here need to modify
             ig.game.win ? ig.game.round < ig.game.maxRound ? (ig.game.win = !1,
             ig.game.round++,
             ig.game.director.jumpTo(LevelBattle),
