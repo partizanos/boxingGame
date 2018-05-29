@@ -11,7 +11,7 @@
 			socket_url  : "ws://127.0.0.1:10138/myo/",
 			app_id      : 'com.myojs.default'
 		},
-		lockingPolicy : 'none',
+		lockingPolicy : 'default',
 		events : [],
 		myos : [],
 
@@ -357,10 +357,12 @@ Myo.on('gyroscope', function(quant){ gyroListener(quant); })
 
 
 var settings = {
- oldOrientationData: {x: 0, y:0, z :0 },  distance: 0
-, oldTime: new Date().getTime()
-, timeDifference: 1000
-, lastLaugh: 0
+	 oldOrientationData: {x: null, y:null, z :null }
+	 ,  distance: 1000
+	, oldTime: new Date().getTime()
+	, timeDifference: 0
+	, lastLaugh: 0
+	, accel : []
  }
 
 var right = Object.assign(settings);
@@ -369,77 +371,159 @@ var handSide = {
  "c0-6b-70-de-9e-08": {
  	hand: "left",
  	code: 37,
- 	settings: left
+ 	settings: left,
+ 	initFlag: false
  },
  "dd-e1-c9-30-42-f2": {
  	hand: "right",
  	code: 39,
- 	settings: right
+ 	settings: right,
+ 	initFlag: false
  },
 };
 
-
-function getNewDistance(oldOrientationData, orientationData) {
-	return  Math.max(oldOrientationData.x - orientationData.x,
-						oldOrientationData.y - orientationData.y,
-						oldOrientationData.z - orientationData.z)
+function initHand(hand, data) {
+	 hand.settings.oldOrientationData = {x: data.x, y:data.y, z :data.z  }
+	 hand.settings.oldAccel = {ax: data.ax, ay:data.ay, az :data.az  }
 }
 
+function getNewDistance(oldOrientationData, orientationData) {
+	return  Math.max(Math.abs(oldOrientationData.x - orientationData.x),
+						Math.abs(oldOrientationData.y - orientationData.y),
+						Math.abs(oldOrientationData.z - orientationData.z))
+}
+
+function mapAccelTime(hand ,acell)  {
+	if (acell < 1) 
+		return 1000;
+	if (acell < 1.1) 
+		return 900;
+	if (acell < 1.2) 
+		return 800;
+	if (acell < 1.5) 
+		return 300;
+
+}
+store = []
+
+const blockHandle = (data, currentHand) => {
+
+	Object.keys(handSide).forEach(handKey => {
+		if( handSide[handKey] !== currentHand) {
+			block = 
+				compareDistance(currentHand.settings.oldAccel, data)
+				&&
+				compareDistance(handSide[handKey].settings.oldAccel, data)
+			// console.log(block)
+				 console.log( new Date().getTime());
+
+			if(!block)
+				 console.log(block, new Date().getTime());
+		}
+	})
+}
+
+const compareDistance = ( oldAccel, data) => 
+	Math.abs(oldAccel.ax) - Math.abs(data.ax) < 0.25 
+	&& 
+	Math.abs(oldAccel.ay) - Math.abs(data.ay) < 0.25 
+	&& 
+	Math.abs(oldAccel.az) - Math.abs(data.az) < 0.25 
+	
+	
+ 
 var gyroListener = function(data){
+	
+	var hand = handSide[data.myo.macAddress];
 
-	allHand = handSide[data.myo.macAddress]
-	handSettings = handSide[data.myo.macAddress].settings
-	code = handSide[data.myo.macAddress].code
+	if(!hand.initFlag) {
+		initHand(hand, data);
+		hand.initFlag = !hand.initFlag
+	}
 
-	handSettings.distance = getNewDistance(handSettings.oldOrientationData, data);
-	handSettings.oldOrientationData = data;
-	handSettings.newTime = new Date().getTime();	 
-	handSettings.timeDifference = handSettings.newTime - handSettings.oldTime;
-	 maxAccel = Math.max(Math.abs(data.ax) ,Math.abs(data.ay) ,Math.abs(data.az) )
 
-	if( true 
-	 	&&handSettings.timeDifference > 300
+	// blockHandle(data, hand)
+
+		// if (hand.hand == "left")
+		// console.log (data.ax, data.ay, data.az )
+
+
+	handSettings = hand.settings
+	code = hand.code
+
+	maxAccel = Math.max(Math.abs(data.ax) ,Math.abs(data.ay) ,Math.abs(data.az) )
+	accelAvg = getAvgAccel(hand.settings.accel) || 0.8;
+	if (accelAvg> 1.4 ) hand.settings.accel = [];
+	distance = getNewDistance(handSettings.oldOrientationData, data);
+	newTime = new Date().getTime();	 
+					
+
+	timeLimit = mapAccelTime(hand, maxAccel);
+	timeDifference =  newTime - handSettings.oldTime;
+	
+
+
+	// if no punch for long time hand moves either way
+	if (timeDifference > 5000 ) {
+		updateHand(hand, data, newTime)
+		return;
+	}
+
+	if( 
+		true 
+	 	&&timeDifference > timeLimit
 	 	){
 	
 			if( 
 					true 
-				 	&&maxAccel > 1.1
-				 	&&handSettings.distance > 190
+				 	// &&distance > 200
 		 	){
-		 	console.log("#################")
-		 		printObj(allHand)
-		 		printObj(data)
-		 		printObj(maxAccel)
 
-					sendKeyPress(code);
-			 		 handSettings.oldTime = handSettings.newTime;
-			} else if( 
-						true 
-			 			&&handSettings.distance > 30
-						&&  handSettings.newTime - handSettings.lastLaugh > 3000
-		 		){
-		 		handSettings.lastLaugh = handSettings.newTime;
-		 		console.log("haha u punch like a girl")
-		 	 	handSettings.oldTime = handSettings.newTime;
-		 		}		
-
+				if(
+					true
+				 	&& maxAccel  > 1.2
+					){
+							 		hand.axel=maxAccel
+							 		store.push(hand)
+							 		console.log("#################")
+							 		// printObj(hand)
+							 		// printObj(data)
+							 		// printObj(maxAccel)
+						 			handSettings.accel.push(maxAccel)
+					
+									updateHand(hand, data, newTime);
+										sendKeyPress(code, "keydown");
+					} else {
+						// data.myo.vibrate()
+					}
+			}
+			 // else if( 
+			// 			true 
+			//  			&&handSettings.distance > 30
+			// 			&&  handSettings.newTime - handSettings.lastLaugh > 3000
+		 // 		){
+		 // 		handSettings.lastLaugh = handSettings.newTime;
+		 // 		console.log("haha u punch like a girl")
+		 // 	 	handSettings.oldTime = handSettings.newTime;
+		 // 		}		
 		}
 }
 
-function sendKeyPress(code) {
+function sendKeyPress(code, eventType) {
 	
-	var event = document.createEvent('KeyboardEvent'); 
-	Object.defineProperty(event, 'keyCode', {
+	var eventToSend = document.createEvent('KeyboardEvent'); 
+	Object.defineProperty(eventToSend, 'keyCode', {
 	    get : function() { return this.keyCodeVal;}
 	});     
 
-	Object.defineProperty(event, 'which', {
-		get : function() { return this.keyCodeVal;}
-	});  
+	eventToSend.initKeyboardEvent(eventType,true,true,null,false,false,false,false,code,code);
+	eventToSend.keyCodeVal = code;
+	document.querySelector('body').dispatchEvent(eventToSend);
+}
 
-	event.initKeyboardEvent("keydown",true,true,null,false,false,false,false,code,code);
-	event.keyCodeVal = code;
-	document.querySelector('body').dispatchEvent(event);
+const updateHand = (hand, data, newTime) => {
+	hand.settings.oldOrientationData = {x: data.x, y:data.y, z:data.z};
+	hand.settings.oldTime = newTime;	
 }
 
 function printObj(obj) {
@@ -447,3 +531,7 @@ function printObj(obj) {
 		 			key => console.log(key, obj[key])
 		 		)
 }
+
+const getAvgAccel = (arr) => 
+	arr.length > 3 ? arr.slice(  arr.length-3, arr.length-1)
+	.reduce(function(a, b) { return a + b; }) / 3 : 0
