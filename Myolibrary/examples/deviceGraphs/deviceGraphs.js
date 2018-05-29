@@ -106,6 +106,19 @@ var updateGraph = function(orientationData){
 
 
 var accelerometerTrigger = function(data) {
-  max = Math.max(Math.abs(data.x) ,Math.abs(data.y) ,Math.abs(data.z) )
-  max > 1.4 ? console.log(max) :null
+  max = Math.max(
+  	Math.abs(data.x),
+  	Math.abs(data.y),
+  	Math.abs(data.z) 
+  );
+  if(max > 1.4) {
+   console.log(data.myo.macAddress)
+
+  }
+
+// macAddress: "c0-6b-70-de-9e-08" 
+// == left
+// data.myo.macAddress 
+// "dd-e1-c9-30-42-f2"
+// paint right
 }

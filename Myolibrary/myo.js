@@ -204,12 +204,17 @@
 				accelerometer : {
 					x : data.accelerometer[0],
 					y : data.accelerometer[1],
-					z : data.accelerometer[2]
+					z : data.accelerometer[2],
+					myo: myo,
+					data:data
 				},
 				gyroscope : {
 					x : data.gyroscope[0],
 					y : data.gyroscope[1],
-					z : data.gyroscope[2]
+					z : data.gyroscope[2],
+					myo: myo,
+					data:data
+
 				}
 			};
 			if(!myo.lastIMU) myo.lastIMU = imu_data;

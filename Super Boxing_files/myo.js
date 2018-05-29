@@ -230,8 +230,6 @@ var handside;
 		//Status Events
 		'arm_synced' : function(myo, data){
 			myo.arm = data.arm;
-			// hand = myo.arm;
-			// myo.trigger('get_arm', handside);
 			myo.direction = data.x_direction;
 			myo.warmupState = data.warmup_state;
 			myo.synced = true;
@@ -350,15 +348,16 @@ var handside;
 	if(typeof module !== 'undefined') module.exports = Myo;
 })();
 
-
-
-
 //This tells Myo.js to create the web sockets needed to communnicate with Myo Connect
 Myo.connect('com.myojs.deviceGraphs');
 
-Myo.on('gyroscope', function(quant){
-	updateGraph(quant);
-})
+Myo.on('gyroscope', function(quant){ gyroListener(quant); })
+
+function getNewDistance(oldOrientationData, orientationData) {
+	return  Math.max(oldOrientationData.x - orientationData.x,
+						oldOrientationData.y - orientationData.y,
+						oldOrientationData.z - orientationData.z)
+}
 
 var oldOrientationData = {x: 0, y:0, z :0 },  distance = 0;
 var oldTime = new Date().getTime()
@@ -367,18 +366,8 @@ var lastLaugh = 0;
 var keyboardEvent = document.createEvent("KeyboardEvent");
 var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
 
-var updateGraph = function(orientationData){
-var hand = orientationData.myo.name;
-// console.log("data", orientationData.data);
-// console.log("Myo", orientationData.myo.name);
-distancex = oldOrientationData.x - orientationData.x
-distancey = oldOrientationData.y - orientationData.y
-distancez = oldOrientationData.z - orientationData.z
-	  distance = Math.max(
-	 	(distancex),
-	 	(distancey),
-	 	(distancez))
-
+var gyroListener = function(orientationData){
+	distance = getNewDistance(oldOrientationData, orientationData);
 	 oldOrientationData = orientationData;
 	 newTime = new Date().getTime();	 
 	 timeDifference = newTime - oldTime;
@@ -386,100 +375,59 @@ distancez = oldOrientationData.z - orientationData.z
 	 	&&timeDifference > 50
 	 	){
 	
-		 if( true 
-	 	&&distance > 190
-	 	){
+			if( 
+					true 
+				 	&&distance > 190
+		 	){
+		 		 sendPunch(orientationData);
+		 		 oldTime = newTime;
+			} else if( 
+						true 
+			 			&&distance > 30
+						&&  newTime - lastLaugh > 3000
+		 		){
+		 		lastLaugh = newTime;
+		 		console.log("haha u punch like a girl")
+		 	 	oldTime = newTime;
+		 		}		
 
-	 //  console.log("distance x: ", 	distancex)
-		// console.log("distance y: ",distancey)
-		// console.log("distance z: ",distancez)
-	 //  console.log(" timeDiff : ", timeDifference)
-	 //  console.log("TODO call punch");
-	  sendPunch(hand);
-	 	 oldTime = newTime;
-	 } else if( true 
-	 	&&distance > 30
-	 	&&  newTime - lastLaugh > 3000
-	 	){
-	 		lastLaugh = newTime;
-	 	console.log("haha u punch like a girl")
-	 	 oldTime = newTime;
-	 }
-
-	 }
+		}
 }
 
-var accelerometerTrigger = function(data) {
-  max = Math.max(Math.abs(data.x) ,Math.abs(data.y) ,Math.abs(data.z) )
-  max > 1.4 ? sendPunch() :null
-  max > 1.2 && max< 1.4 ? console.log("haha") :null
+function triggerEvent(el, type){
+	if ('createEvent' in document) {
+	        // modern browsers, IE9+
+	        var e = document.createEvent('HTMLEvents');
+	        e.initEvent(type, false, true);
+	        el.dispatchEvent(e);
+    } 
 }
 
 
-function sendPunch(hand) {
+var handSide = {
+ "c0-6b-70-de-9e-08": 37,
+ "dd-e1-c9-30-42-f2": 39,
+};
 
-	console.log("PUNCHED")
-		  function triggerEvent(el, type){
-if ('createEvent' in document) {
-        // modern browsers, IE9+
-        var e = document.createEvent('HTMLEvents');
-        e.initEvent(type, false, true);
-        el.dispatchEvent(e);
-    } else {
-        // IE 8
-        var e = document.createEventObject();
-        e.eventType = type;
-        el.fireEvent('on'+e.eventType, e);
-    }
+function sendKeyPress(code) {
+	console.log(code)
+
+	var event = document.createEvent('KeyboardEvent'); 
+	Object.defineProperty(event, 'keyCode', {
+	    get : function() { return this.keyCodeVal;}
+	});     
+
+	Object.defineProperty(event, 'which', {
+		get : function() { return this.keyCodeVal;}
+	});  
+
+	event.initKeyboardEvent("keydown",true,true,null,false,false,false,false,code,code);
+	event.keyCodeVal = code;
+	document.querySelector('body').dispatchEvent(event);
 }
-// setInterval(function() {	 
-
+function sendPunch(data) {
+	var code = handSide[data.myo.macAddress]
 	var event = document.createEvent('KeyboardEvent'); // create a key event
-
-	    // Chromium Hack
-    Object.defineProperty(event, 'keyCode', {
-                get : function() {
-                    return this.keyCodeVal;
-                }
-    });     
-    Object.defineProperty(event, 'which', {
-                get : function() {
-                    return this.keyCodeVal;
-                }
-    });  
- console.log('punching arm:', handside);
-// define the event
-if (hand == "Left"){
-event.initKeyboardEvent("keydown",       // typeArg,                                                           
-                   true,             // canBubbleArg,                                                        
-                   true,             // cancelableArg,                                                       
-                   null,             // viewArg,  Specifies UIEvent.view. This value may be null.     
-                   false,            // ctrlKeyArg,                                                               
-                   false,            // altKeyArg,                                                        
-                   false,            // shiftKeyArg,                                                      
-                   false,            // metaKeyArg,                                                       
-                    37,               // keyCodeArg,                                                      
-                    37);              // charCodeArg);
-
-event.keyCodeVal = 37;
-document.querySelector('body').dispatchEvent(event);
-// }, 1500) 	
-}
-if (hand == "Right"){
-event.initKeyboardEvent("keydown",       // typeArg,                                                           
-                   true,             // canBubbleArg,                                                        
-                   true,             // cancelableArg,                                                       
-                   null,             // viewArg,  Specifies UIEvent.view. This value may be null.     
-                   false,            // ctrlKeyArg,                                                               
-                   false,            // altKeyArg,                                                        
-                   false,            // shiftKeyArg,                                                      
-                   false,            // metaKeyArg,                                                       
-                    39,               // keyCodeArg,                                                      
-                    39);              // charCodeArg);
-
-event.keyCodeVal = 39;
-document.querySelector('body').dispatchEvent(event);
-// }, 1500) 	
+	sendKeyPress(code); 
 }
 
-}
