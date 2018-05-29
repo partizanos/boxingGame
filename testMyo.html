@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)https://cdn-factory.marketjs.com/en/super-boxing/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Super Boxing</title>
+
+
+
+<meta name="viewport" content="initial-scale=1.0001, minimum-scale=1.0001, maximum-scale=1.0001, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="shortcut icon" href="https://cdn-factory.marketjs.com/en/super-boxing/favicon.ico">
+<script type="text/javascript" src="./Super Boxing_files/jquery.js"></script>
+<script type="text/javascript" src="./Super Boxing_files/jukebox.js"></script>
+<script type="text/javascript" src="./Super Boxing_files/utilities.js"></script>
+<script type="text/javascript" src="./Super Boxing_files/myo.js"></script>
+
+<script type="text/javascript">
+	function set(code) {
+		a = document.querySelector("#hand")
+		a.innerHTML += new Date().getHours() + "h "
+		               + new Date().getMinutes() + "mins " 
+		               + new Date().getSeconds() + "s " 
+		               + "," +code + "</br>" 
+	}
+	document.addEventListener("keydown", function(ev){
+		var code = ev.keyCodeVal
+		if(
+			code == 37  
+			||code == 39 
+		) 
+		  set(code)
+	})
+</script>
+<body>
+	<div id="hand"></div>
+</body>
+
+</html>

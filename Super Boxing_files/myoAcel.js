@@ -11,7 +11,7 @@
 			socket_url  : "ws://127.0.0.1:10138/myo/",
 			app_id      : 'com.myojs.default'
 		},
-		lockingPolicy : 'none',
+		lockingPolicy : 'standard',
 		events : [],
 		myos : [],
 
@@ -204,17 +204,14 @@
 				accelerometer : {
 					x : data.accelerometer[0],
 					y : data.accelerometer[1],
-					z : data.accelerometer[2]
-				},
+					z : data.accelerometer[2],
+				data: data,
+					myo: myo},
 				gyroscope : {
 					x : data.gyroscope[0],
 					y : data.gyroscope[1],
 					z : data.gyroscope[2],
-					ax : data.accelerometer[0],
-					ay : data.accelerometer[1],
-					az : data.accelerometer[2],
-					data: data,
-					myo: myo
+					
 				}
 			};
 			if(!myo.lastIMU) myo.lastIMU = imu_data;
@@ -385,9 +382,9 @@ function getNewDistance(oldOrientationData, orientationData) {
 						oldOrientationData.z - orientationData.z)
 }
 
+
 var gyroListener = function(data){
 
-	allHand = handSide[data.myo.macAddress]
 	handSettings = handSide[data.myo.macAddress].settings
 	code = handSide[data.myo.macAddress].code
 
@@ -395,22 +392,14 @@ var gyroListener = function(data){
 	handSettings.oldOrientationData = data;
 	handSettings.newTime = new Date().getTime();	 
 	handSettings.timeDifference = handSettings.newTime - handSettings.oldTime;
-	 maxAccel = Math.max(Math.abs(data.ax) ,Math.abs(data.ay) ,Math.abs(data.az) )
-
 	if( true 
 	 	&&handSettings.timeDifference > 300
 	 	){
 	
 			if( 
 					true 
-				 	&&maxAccel > 1.1
 				 	&&handSettings.distance > 190
 		 	){
-		 	console.log("#################")
-		 		printObj(allHand)
-		 		printObj(data)
-		 		printObj(maxAccel)
-
 					sendKeyPress(code);
 			 		 handSettings.oldTime = handSettings.newTime;
 			} else if( 
@@ -427,7 +416,8 @@ var gyroListener = function(data){
 }
 
 function sendKeyPress(code) {
-	
+	console.log(code)
+
 	var event = document.createEvent('KeyboardEvent'); 
 	Object.defineProperty(event, 'keyCode', {
 	    get : function() { return this.keyCodeVal;}
@@ -440,10 +430,4 @@ function sendKeyPress(code) {
 	event.initKeyboardEvent("keydown",true,true,null,false,false,false,false,code,code);
 	event.keyCodeVal = code;
 	document.querySelector('body').dispatchEvent(event);
-}
-
-function printObj(obj) {
-			 		Object.keys(obj).forEach(
-		 			key => console.log(key, obj[key])
-		 		)
 }
