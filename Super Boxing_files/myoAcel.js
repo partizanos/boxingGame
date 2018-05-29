@@ -205,16 +205,13 @@
 					x : data.accelerometer[0],
 					y : data.accelerometer[1],
 					z : data.accelerometer[2],
-					myo: myo,
-					data:data
-				},
+				data: data,
+					myo: myo},
 				gyroscope : {
 					x : data.gyroscope[0],
 					y : data.gyroscope[1],
 					z : data.gyroscope[2],
-					myo: myo,
-					data:data
-
+					
 				}
 			};
 			if(!myo.lastIMU) myo.lastIMU = imu_data;
@@ -235,6 +232,7 @@
 			myo.direction = data.x_direction;
 			myo.warmupState = data.warmup_state;
 			myo.synced = true;
+
 			return true;
 		},
 		'arm_unsynced' : function(myo, data){
@@ -349,6 +347,87 @@
 	if(typeof module !== 'undefined') module.exports = Myo;
 })();
 
+//This tells Myo.js to create the web sockets needed to communnicate with Myo Connect
+Myo.connect('com.myojs.deviceGraphs');
+
+Myo.on('gyroscope', function(quant){ gyroListener(quant); })
 
 
+var settings = {
+ oldOrientationData: {x: 0, y:0, z :0 },  distance: 0
+, oldTime: new Date().getTime()
+, timeDifference: 1000
+, lastLaugh: 0
+ }
 
+var right = Object.assign(settings);
+var left = Object.assign(settings);
+var handSide = {
+ "c0-6b-70-de-9e-08": {
+ 	hand: "left",
+ 	code: 37,
+ 	settings: left
+ },
+ "dd-e1-c9-30-42-f2": {
+ 	hand: "right",
+ 	code: 39,
+ 	settings: right
+ },
+};
+
+
+function getNewDistance(oldOrientationData, orientationData) {
+	return  Math.max(oldOrientationData.x - orientationData.x,
+						oldOrientationData.y - orientationData.y,
+						oldOrientationData.z - orientationData.z)
+}
+
+
+var gyroListener = function(data){
+
+	handSettings = handSide[data.myo.macAddress].settings
+	code = handSide[data.myo.macAddress].code
+
+	handSettings.distance = getNewDistance(handSettings.oldOrientationData, data);
+	handSettings.oldOrientationData = data;
+	handSettings.newTime = new Date().getTime();	 
+	handSettings.timeDifference = handSettings.newTime - handSettings.oldTime;
+	if( true 
+	 	&&handSettings.timeDifference > 300
+	 	){
+	
+			if( 
+					true 
+				 	&&handSettings.distance > 190
+		 	){
+					sendKeyPress(code);
+			 		 handSettings.oldTime = handSettings.newTime;
+			} else if( 
+						true 
+			 			&&handSettings.distance > 30
+						&&  handSettings.newTime - handSettings.lastLaugh > 3000
+		 		){
+		 		handSettings.lastLaugh = handSettings.newTime;
+		 		console.log("haha u punch like a girl")
+		 	 	handSettings.oldTime = handSettings.newTime;
+		 		}		
+
+		}
+}
+
+function sendKeyPress(code) {
+	console.log(code)
+
+	var event = document.createEvent('KeyboardEvent'); 
+	Object.defineProperty(event, 'keyCode', {
+	    get : function() { return this.keyCodeVal;}
+	});     
+
+	Object.defineProperty(event, 'which', {
+		get : function() { return this.keyCodeVal;}
+	});  
+
+	event.initKeyboardEvent("keydown",true,true,null,false,false,false,false,code,code);
+	event.keyCodeVal = code;
+	document.querySelector('body').dispatchEvent(event);
+}
