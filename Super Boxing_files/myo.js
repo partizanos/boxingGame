@@ -460,9 +460,9 @@ var gyroListener = function(data){
 	distance = getNewDistance(handSettings.oldOrientationData, data);
 	
 
-
-	newTime = new Date().getTime();	 	
-	store.push({accelleration: maxAccel, time: newTime})
+	myDate = new Date()
+	newTime = myDate.getTime();	 	
+	store.push({accelleration: maxAccel, time: myDate})
 
 	// blockHandle(distance, hand, newTime)
 
@@ -491,7 +491,7 @@ var gyroListener = function(data){
 				 	&& maxAccel  > 1.2
 					){
 							 		hand.axel=maxAccel
-							 		store.push(hand)
+							 		punchesThrownData.push({time:myDate, punData: hand})
 							 		console.log("#################")
 							 		// printObj(hand)
 							 		// printObj(data)
@@ -552,3 +552,4 @@ counterLaughs=0
 counterEnemy=0
 lastLaugh =0 
 store = []
+punchesThrownData = []
