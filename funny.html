@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)https://cdn-factory.marketjs.com/en/super-boxing/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Super Boxing</title>
+
+
+
+<meta name="viewport" content="initial-scale=1.0001, minimum-scale=1.0001, maximum-scale=1.0001, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" type="text/css" href="./Super Boxing_files/game.css">
+<link rel="shortcut icon" href="https://cdn-factory.marketjs.com/en/super-boxing/favicon.ico">
+<script type="text/javascript" src="./Super Boxing_files/jquery.js"></script>
+<script type="text/javascript" src="./Super Boxing_files/jukebox.js"></script>
+
+<script type="text/javascript" src="./Super Boxing_files/utilities.js"></script>
+<script type="text/javascript" src="./Super Boxing_files/funnySound.js"></script>
+
+<script type="text/javascript" src="./Super Boxing_files/game.js.download"></script>
+<script type="text/javascript" src="./Super Boxing_files/myo.js"></script>
+
+
+<script type="text/javascript" src="./Super Boxing_files/webaudio-context-patch.js.download"></script>
+</head>
+<body onload="setTimeout(function(){window.scrollTo(0,1)},1);">
+<div id="ajaxbar" style="width: 1366px; height: 637px; background: none;">
+<div id="game" style="width: 477.75px; height: 637px; left: 444.125px;"><canvas id="canvas" width="480" height="640" style="transform: rotateX(0deg) rotateY(0.000126444deg) rotateZ(0deg);"></canvas></div>
+<div id="orientate" style="width: 477.75px; height: 637px; left: 444.125px;"><img src="./Super Boxing_files/landscape.jpg"></div>
+<div id="play" class="play" onclick="ig.game.pressPlay();ig.soundHandler.staticSound.play();" style="width: 477.75px; height: 637px; left: 444.125px;"><img src="./Super Boxing_files/cover-start.jpg"></div>
+
+<div id="MobileAdInGamePreroll" style="width: 1366px; height: 637px;">
+<div id="MobileAdInGamePreroll-Box" style="left: 532px; top: 183.5px;">
+<div id="MobileAdInGamePreroll-Box-Header"></div>
+<a id="MobileAdInGamePreroll-Box-Close" onclick="MobileAdInGamePreroll.Close();"></a>
+<div id="MobileAdInGamePreroll-Box-Body">
+<center>
+
+
+<img src="./Super Boxing_files/generic.png">
+
+</center>
+</div>
+<div id="MobileAdInGamePreroll-Box-Footer"></div>
+</div>
+</div>
+
+<div id="MobileAdInGamePreroll2" style="width: 1366px; height: 637px;">
+<div id="MobileAdInGamePreroll2-Box" style="left: 532px; top: 183.5px;">
+<div id="MobileAdInGamePreroll2-Box-Header"></div>
+<a id="MobileAdInGamePreroll2-Box-Close" onclick="MobileAdInGamePreroll.Close();"></a>
+<div id="MobileAdInGamePreroll2-Box-Body">
+<center>
+
+</center>
+</div>
+<div id="MobileAdInGamePreroll2-Box-Footer"></div>
+</div>
+</div>
+
+<div id="MobileAdInGamePreroll3" style="width: 1366px; height: 637px;">
+<div id="MobileAdInGamePreroll3-Box" style="left: 532px; top: 183.5px;">
+<div id="MobileAdInGamePreroll3-Box-Header"></div>
+<a id="MobileAdInGamePreroll3-Box-Close" onclick="MobileAdInGamePreroll.Close();"></a>
+<div id="MobileAdInGamePreroll3-Box-Body">
+<center>
+
+</center>
+</div>
+<div id="MobileAdInGamePreroll3-Box-Footer"></div>
+</div>
+</div>
+<div id="MobileAdInGameHeader">
+
+</div>
+<div id="MobileAdInGameHeader2">
+
+</div>
+<div id="MobileAdInGameHeader3">
+
+</div>
+<div id="MobileAdInGameFooter">
+
+</div>
+<div id="MobileAdInGameFooter2">
+
+</div>
+<div id="MobileAdInGameFooter3">
+
+</div>
+<div id="MobileAdInGameEnd" style="width: 1366px; height: 637px;">
+<div id="MobileAdInGameEnd-Box" style="left: 532px; top: 183.5px;">
+<div id="MobileAdInGameEnd-Box-Header"></div>
+<a id="MobileAdInGameEnd-Box-Close" onclick="MobileAdInGameEnd.Close();"></a>
+<div id="MobileAdInGameEnd-Box-Body">
+<center>
+
+</center>
+</div>
+<div id="MobileAdInGameEnd-Box-Footer"></div>
+</div>
+</div>
+
+<div id="MobileAdInGameEnd2" style="width: 1366px; height: 637px;">
+<div id="MobileAdInGameEnd2-Box" style="left: 532px; top: 183.5px;">
+<div id="MobileAdInGameEnd2-Box-Header"></div>
+<a id="MobileAdInGameEnd2-Box-Close" onclick="MobileAdInGameEnd.Close();"></a>
+<div id="MobileAdInGameEnd2-Box-Body">
+<center>
+
+</center>
+</div>
+<div id="MobileAdInGameEnd2-Box-Footer"></div>
+</div>
+</div>
+
+<div id="MobileAdInGameEnd3" style="width: 1366px; height: 637px;">
+<div id="MobileAdInGameEnd3-Box" style="left: 532px; top: 183.5px;">
+<div id="MobileAdInGameEnd3-Box-Header"></div>
+<a id="MobileAdInGameEnd3-Box-Close" onclick="MobileAdInGameEnd.Close();"></a>
+<div id="MobileAdInGameEnd3-Box-Body">
+<center>
+
+</center>
+</div>
+<div id="MobileAdInGameEnd3-Box-Footer"></div>
+</div>
+</div>
+
+<div id="play-desktop" class="play" style="display: block; visibility: hidden; width: 477.75px; height: 637px; left: 444.125px;"><div style="color:white;background-color: rgba(255, 255, 255, 0.3); border: 2px solid #fff; font-size:20px; border-radius: 5px; position: relative; float: left; top: 50%; left: 50%; transform: translate(-50%, -50%);"><div style="padding:20px 50px; font-family: Arial;">TAP TO START</div></div></div></div>
+
+
+
+
+<div id="more-games" style="float: left; position: absolute; left: 633.438px; top: 551.776px; width: 100.466px; height: 58.973px; display: none; visibility: hidden;"><a target="_blank" href="http://www.marketjs.com/game/links/mobile"><img style="width:100%;height:100%" src="./Super Boxing_files/invisible.png"></a></div><span style="margin: 0px auto; border: 2px dotted rgb(255, 165, 0); position: absolute; z-index: 2147483647; visibility: hidden; left: 265px; width: 0px; top: 93px; height: 0px;"></span><span style="z-index: 2147483647; position: absolute; visibility: hidden; left: 250px; width: 50px; top: 78px; height: 20px; font-size: 10px; color: black;"></span>
+
+<script type="text/javascript">
+	  // function triggerEvent(el, type){
+// if ('createEvent' in document) {
+//         // modern browsers, IE9+
+//         var e = document.createEvent('HTMLEvents');
+//         e.initEvent(type, false, true);
+//         el.dispatchEvent(e);
+//     } else {
+//         // IE 8
+//         var e = document.createEventObject();
+//         e.eventType = type;
+//         el.fireEvent('on'+e.eventType, e);
+//     }
+// }
+// setInterval(function() {	 
+
+// 	var event = document.createEvent('KeyboardEvent'); // create a key event
+
+// 	    // Chromium Hack
+//     Object.defineProperty(event, 'keyCode', {
+//                 get : function() {
+//                     return this.keyCodeVal;
+//                 }
+//     });     
+//     Object.defineProperty(event, 'which', {
+//                 get : function() {
+//                     return this.keyCodeVal;
+//                 }
+//     });  
+// // define the event
+// event.initKeyboardEvent("keydown",       // typeArg,                                                           
+//                    true,             // canBubbleArg,                                                        
+//                    true,             // cancelableArg,                                                       
+//                    null,             // viewArg,  Specifies UIEvent.view. This value may be null.     
+//                    false,            // ctrlKeyArg,                                                               
+//                    false,            // altKeyArg,                                                        
+//                    false,            // shiftKeyArg,                                                      
+//                    false,            // metaKeyArg,                                                       
+//                     37,               // keyCodeArg,                                                      
+//                     37);              // charCodeArg);
+
+// event.keyCodeVal = 37;
+// document.querySelector('body').dispatchEvent(event);
+// }, 1500) 
+</script></body>
+
+
+
+</html>
