@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>BOXING GAME</title>
+<style type="text/css">
+	.Button {
+		display: inline-block;
+	}
+</style>
+</head>
+<body>
+<button class="Button" onClick="setGame('default')">normal</button>
+<button class="Button" onClick="setGame('funny')">funny</button>
+<button class="Button" onClick="setGame('scary')">scary</button>
+
+<iframe id="game" style="height: 35rem; width: 35rem;"
+    src="./default.html"></iframe>
+
+<input id="input" type="" name="" />
+<button onclick="Download()">Download</button>
+</body>
+
+<script type="text/javascript">
+
+		const frame = document.getElementById('game')
+function setGame(name) {
+	frame.src="./" + name + ".html"
+}
+
+	function Download() {
+		const exportName = document.getElementById('input').value;
+		const exportObj = {
+			enemyCounter: frame.contentWindow.counterEnemy,
+			playerCounter: frame.contentWindow.counterPlayer,
+			accellerometerData: frame.contentWindow.store,
+			score: frame.contentWindow.ig.game.score,
+			totalScore: frame.contentWindow.ig.game.totalScore
+		}
+		downloadObjectAsJson(exportObj, exportName)
+	}
+
+	  function downloadObjectAsJson(exportObj, exportName){
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("download", exportName + ".json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
+</script>
+</html>

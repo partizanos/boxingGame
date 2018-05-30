@@ -388,9 +388,9 @@ function initHand(hand, data) {
 }
 
 function getNewDistance(oldOrientationData, orientationData) {
-	return  Math.max(Math.abs(oldOrientationData.x - orientationData.x),
-						Math.abs(oldOrientationData.y - orientationData.y),
-						Math.abs(oldOrientationData.z - orientationData.z))
+	return  Math.max(Math.abs(orientationData.x),
+						Math.abs(orientationData.y),
+						Math.abs(orientationData.z))
 }
 
 function mapAccelTime(hand ,acell)  {
@@ -404,66 +404,73 @@ function mapAccelTime(hand ,acell)  {
 		return 300;
 
 }
-store = []
 
-const blockHandle = (data, currentHand) => {
+const blockHandle = (data, currentHand, time) => {
 
-	Object.keys(handSide).forEach(handKey => {
-		if( handSide[handKey] !== currentHand) {
-			block = 
-				compareDistance(currentHand.settings.oldAccel, data)
-				&&
-				compareDistance(handSide[handKey].settings.oldAccel, data)
-			// console.log(block)
-				 console.log( new Date().getTime());
+	if (!currentHand.blockTime) currentHand.blockTime = 0
+	if (!currentHand.unblockTime) currentHand.unblockTime = 0
+	if (distance > 170 ) 
+		if ( !currentHand.blockFlag && (time - currentHand.unblockTime )> 500 ) {
+				currentHand.blockFlag = true
+				currentHand.blockTime = time
+		} else if( time - currentHand.blockTime > 800) {
+			console.log("unblock")
 
-			if(!block)
-				 console.log(block, new Date().getTime());
+			sendKeyPress(40, "keyup")
+			currentHand.blockFlag = false
+			currentHand.unblockTime = time
 		}
-	})
-}
 
-const compareDistance = ( oldAccel, data) => 
-	Math.abs(oldAccel.ax) - Math.abs(data.ax) < 0.25 
-	&& 
-	Math.abs(oldAccel.ay) - Math.abs(data.ay) < 0.25 
-	&& 
-	Math.abs(oldAccel.az) - Math.abs(data.az) < 0.25 
-	
+	const shouldBlockFlag = Object.keys(handSide)
+		.filter(handKey => handSide[handKey].blockFlag)
+		.length ==  Object.keys(handSide).length;
+
+		if(shouldBlockFlag) {
+			console.log("block")
+			// debugger;
+					sendKeyPress(40, "keydown")
+		}	
+		return shouldBlockFlag;
+}
 	
  
 var gyroListener = function(data){
 	
+					window.data= data;
 	var hand = handSide[data.myo.macAddress];
 
 	if(!hand.initFlag) {
 		initHand(hand, data);
 		hand.initFlag = !hand.initFlag
 	}
-
-
-	// blockHandle(data, hand)
-
-		// if (hand.hand == "left")
-		// console.log (data.ax, data.ay, data.az )
+	// if (hand.hand == "left")
+	// console.log (data.ax, data.ay, data.az )
 
 
 	handSettings = hand.settings
 	code = hand.code
 
 	maxAccel = Math.max(Math.abs(data.ax) ,Math.abs(data.ay) ,Math.abs(data.az) )
-	accelAvg = getAvgAccel(hand.settings.accel) || 0.8;
-	if (accelAvg> 1.4 ) hand.settings.accel = [];
-	distance = getNewDistance(handSettings.oldOrientationData, data);
-	newTime = new Date().getTime();	 
-					
 
-	timeLimit = mapAccelTime(hand, maxAccel);
-	timeDifference =  newTime - handSettings.oldTime;
+	accelAvg = getAvgAccel(hand.settings.accel) || 0.8;
+	//empty acceleration if threshold gets too high
+	if (accelAvg> 1.4 ) 
+		hand.settings.accel = [];
+
+	distance = getNewDistance(handSettings.oldOrientationData, data);
 	
 
 
-	// if no punch for long time hand moves either way
+	newTime = new Date().getTime();	 	
+	store.push({accelleration: maxAccel, time: newTime})
+
+	// blockHandle(distance, hand, newTime)
+
+	timeLimit = mapAccelTime(hand, maxAccel);
+	timeDifference =  newTime - handSettings.oldTime;
+
+
+	// if no punch for long time update data hand since it moves either way
 	if (timeDifference > 5000 ) {
 		updateHand(hand, data, newTime)
 		return;
@@ -492,20 +499,23 @@ var gyroListener = function(data){
 						 			handSettings.accel.push(maxAccel)
 					
 									updateHand(hand, data, newTime);
-										sendKeyPress(code, "keydown");
-					} else {
-						// data.myo.vibrate()
-					}
+									sendKeyPress(code, "keydown");
+					} 
+					// else if(  newTime - lastLaugh > 3000){
+				 // 	// 	counterLaughs++;
+				 // 	// 	console.log("haha u punch like a girl")
+					// 	// lastLaugh = newTime
+					// }
 			}
 			 // else if( 
-			// 			true 
-			//  			&&handSettings.distance > 30
-			// 			&&  handSettings.newTime - handSettings.lastLaugh > 3000
-		 // 		){
-		 // 		handSettings.lastLaugh = handSettings.newTime;
-		 // 		console.log("haha u punch like a girl")
-		 // 	 	handSettings.oldTime = handSettings.newTime;
-		 // 		}		
+				// 		true 
+			 // 			&&handSettings.distance > 30
+				// 		&&  handSettings.newTime - handSettings.lastLaugh > 3000
+		 	// 	){
+		 	// 	handSettings.lastLaugh = handSettings.newTime;
+		 	// 	console.log("haha u punch like a girl")
+		 	//  	handSettings.oldTime = handSettings.newTime;
+		 	// 	}		
 		}
 }
 
@@ -535,3 +545,10 @@ function printObj(obj) {
 const getAvgAccel = (arr) => 
 	arr.length > 3 ? arr.slice(  arr.length-3, arr.length-1)
 	.reduce(function(a, b) { return a + b; }) / 3 : 0
+
+
+counterPlayer=0
+counterLaughs=0
+counterEnemy=0
+lastLaugh =0 
+store = []
