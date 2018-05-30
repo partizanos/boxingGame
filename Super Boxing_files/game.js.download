@@ -5229,20 +5229,22 @@ ig.module("game.entities.fighter")
         },
         punch: function(b, c) {
      
-            if(this.name == "player")
-            counterPlayer++;
-            if(this.name == "enemy")
-            counterEnemy++;
-            console.log("#punches Player : ", counterPlayer)
-            console.log("#punches Enemy: ", counterEnemy)
-            if (this.control.gameStarted && !this.control.gameEnded && this.canAction && !this.fainted && !this.control[this.target].fainted) {
-                if (this.currentAnimation === this[this.name].animations.breath && !this.dodging)
+               if (this.control.gameStarted && !this.control.gameEnded && this.canAction && !this.fainted && !this.control[this.target].fainted) {
+                if (this.currentAnimation === this[this.name].animations.breath && !this.dodging) {
                     this.changeAnimation(b),
                     "player" === this.name && (this.fatigue.cur = (this.fatigue.cur + this.fatigue.inc).limit(this.fatigue.min, this.fatigue.max),
                     c instanceof EntityPowerup && !this.special && (this.fatigue.cur = (this.fatigue.cur - this.fatigue.dec).limit(this.fatigue.min, this.fatigue.max),
                     c.consume(),
                     this.special = !0)),
                     this.inputBuffer = [];
+if(this.name == "player")
+                counterPlayer++;
+            if(this.name == "enemy")
+                counterEnemy++;
+            console.log("#punches Player : ", counterPlayer)
+            console.log("#punches Enemy: ", counterEnemy)
+         
+                }
                 else {
                     var d = !0;
                     this.currentFrameKey <= 0.5 * this.currentAnimation.frames.length && (d = !1);
