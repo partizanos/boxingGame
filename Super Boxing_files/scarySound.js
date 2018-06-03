@@ -42,7 +42,7 @@ ig.module("impact.sound-handler")
             path: "media/audio/scary/hook"
         }, {
             name: "upperCutSound",
-            path: "media/audio/upper-cut"
+            path: "media/audio/scary/upper-cut"
         }, {
             name: "roundOneSound",
             path: "media/audio/round-one"

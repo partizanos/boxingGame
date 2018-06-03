@@ -4351,7 +4351,8 @@ ig.module("game.entities.start-control")
                     y: 1.1
                 }
             }));
-            _SETTINGS.MoreGames.Enabled && ig.game.spawnEntity(EntityButtonMoreGames, 0.485 * ig.system.width, 0.9 * ig.system.height);
+            _SETTINGS.MoreGames.Enabled 
+            //&& ig.game.spawnEntity(EntityButtonMoreGames, 0.485 * ig.system.width, 0.9 * ig.system.height);
             this.unlockButtons()
         },
         lockButtons: function() {
@@ -4555,48 +4556,48 @@ ig.module("game.entities.gui")
             this.scoreTween2.start()
         },
         showTutorial: function() {
-            this.tutorialTween1 = this.tween({
-                tutorialAlpha: 0.8,
-                hintScale: {
-                    x: 0.95,
-                    y: 0.95
-                }
-            }, 0.5);
-            this.tutorialTween2 = this.tween({
-                tutorialAlpha: 1,
-                hintScale: {
-                    x: 1,
-                    y: 1
-                }
-            }, 0.25);
-            this.tutorialTween3 = this.tween({
-                tutorialAlpha: 0.9,
-                hintScale: {
-                    x: 0.9,
-                    y: 0.9
-                }
-            }, 0.125);
-            this.tutorialTween4 = this.tween({
-                tutorialAlpha: 1,
-                hintScale: {
-                    x: 1,
-                    y: 1
-                }
-            }, 0.25);
-            this.tutorialTween5 = this.tween({
-                tutorialAlpha: 1,
-                hintScale: {
-                    x: 1,
-                    y: 1
-                }
-            }, 0.5);
-            this.tutorialTween1.chain(this.tutorialTween2);
-            this.tutorialTween2.chain(this.tutorialTween3);
-            this.tutorialTween3.chain(this.tutorialTween4);
-            this.tutorialTween4.chain(this.tutorialTween5);
-            this.tutorialTween5.chain(this.tutorialTween1);
-            this.tutorialTween1.start();
-            this.hideTutorial(1, 10)
+            // this.tutorialTween1 = this.tween({
+            //     tutorialAlpha: 0.8,
+            //     hintScale: {
+            //         x: 0.95,
+            //         y: 0.95
+            //     }
+            // }, 0.5);
+            // this.tutorialTween2 = this.tween({
+            //     tutorialAlpha: 1,
+            //     hintScale: {
+            //         x: 1,
+            //         y: 1
+            //     }
+            // }, 0.25);
+            // this.tutorialTween3 = this.tween({
+            //     tutorialAlpha: 0.9,
+            //     hintScale: {
+            //         x: 0.9,
+            //         y: 0.9
+            //     }
+            // }, 0.125);
+            // this.tutorialTween4 = this.tween({
+            //     tutorialAlpha: 1,
+            //     hintScale: {
+            //         x: 1,
+            //         y: 1
+            //     }
+            // }, 0.25);
+            // this.tutorialTween5 = this.tween({
+            //     tutorialAlpha: 1,
+            //     hintScale: {
+            //         x: 1,
+            //         y: 1
+            //     }
+            // }, 0.5);
+            // this.tutorialTween1.chain(this.tutorialTween2);
+            // this.tutorialTween2.chain(this.tutorialTween3);
+            // this.tutorialTween3.chain(this.tutorialTween4);
+            // this.tutorialTween4.chain(this.tutorialTween5);
+            // this.tutorialTween5.chain(this.tutorialTween1);
+            // this.tutorialTween1.start();
+            // this.hideTutorial(1, 10)
         },
         hideTutorial: function(b, c) {
             this.hiding || (0 <= b || (b = 0),

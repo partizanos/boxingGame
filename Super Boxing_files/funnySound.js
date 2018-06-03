@@ -42,7 +42,7 @@ ig.module("impact.sound-handler")
             path: "media/audio/funny/hook-right"
         }, {
             name: "upperCutSound",
-            path: "media/audio/upper-cut"
+            path: "media/audio/funny/upper-cut"
         }, {
             name: "roundOneSound",
             path: "media/audio/round-one"
@@ -69,7 +69,7 @@ ig.module("impact.sound-handler")
             path: "media/audio/button"
         }, {
             name: "powerUpSound",
-            path: "media/audio/scary/power-up"
+            path: "media/audio/funny/upper-cut"
         }, {
             name: "countOneSound",
             path: "media/audio/funny/count-one"
